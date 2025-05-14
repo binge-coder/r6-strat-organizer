@@ -12,6 +12,7 @@
     "generate-jwt-key": "npx tsx scripts/generate-keys.ts"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.0",
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-checkbox": "^1.2.3",
     "@radix-ui/react-collapsible": "^1.1.8",

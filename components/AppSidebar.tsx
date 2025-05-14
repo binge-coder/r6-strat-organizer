@@ -1,4 +1,14 @@
 "use client";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandShortcut,
+} from "@/components/ui/command";
 import {
   Sidebar,
   SidebarContent,
@@ -13,6 +23,11 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
+import MAPS from "@/data/maps";
+import OPERATORS from "@/data/operator";
+import { getTeamName, logout } from "@/src/auth/auth";
+import { getExcalidrawEditURL } from "@/src/excalidraw";
+import { setActive } from "@/src/strats";
 import {
   Check,
   ChevronDown,
@@ -26,39 +41,24 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useFilter } from "./context/FilterContext";
+import { useUser } from "./context/UserContext";
+import OperatorIcon from "./OperatorIcon";
+import { Checkbox } from "./ui/checkbox";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "./ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import MAPS from "@/data/maps";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "./ui/collapsible";
-import { setActive } from "@/src/strats";
-import { Checkbox } from "./ui/checkbox";
-import { useRouter } from "next/navigation";
-import OPERATORS from "@/data/operator";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandShortcut,
-} from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import OperatorIcon from "./OperatorIcon";
-import { getGoogleDrawingsEditURL } from "@/src/googleDrawings";
-import { useUser } from "./context/UserContext";
-import { logout, getTeamName } from "@/src/auth/auth";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 
 export function AppSidebar() {
   const router = useRouter();
@@ -329,7 +329,7 @@ export function AppSidebar() {
                             className="cursor-pointer my-0.5"
                             onClick={() =>
                               window.open(
-                                getGoogleDrawingsEditURL(strat.drawingID),
+                                getExcalidrawEditURL(strat.drawingID),
                                 "_blank"
                               )
                             }

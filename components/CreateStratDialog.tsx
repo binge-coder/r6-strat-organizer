@@ -1,6 +1,17 @@
 "use client";
 
+import OperatorIcon from "@/components/OperatorIcon";
+import { useFilter } from "@/components/context/FilterContext";
+import { useUser } from "@/components/context/UserContext";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +29,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -25,40 +41,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useUser } from "@/components/context/UserContext";
+import MAPS from "@/data/maps";
+import DEFENDERS from "@/data/operator";
+import { createStrat } from "@/src/actions/strats";
+import { createNewDrawing } from "@/src/excalidraw";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
-import DEFENDERS from "@/data/operator";
-import { Checkbox } from "@/components/ui/checkbox";
-import { createStrat } from "@/src/actions/strats";
 import { toast } from "sonner";
-import MAPS from "@/data/maps";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import OperatorIcon from "@/components/OperatorIcon";
-import { useFilter } from "@/components/context/FilterContext";
+import * as z from "zod";
 
 const formSchema = z.object({
   map: z.string().min(1, "Map is required"),
   site: z.string().min(1, "Site is required"),
   name: z.string().optional(),
   description: z.string().optional(),
-  drawingID: z.string().min(1, "Drawing ID is required"),
+  drawingID: z.string().optional(), // We'll generate this automatically
   powerOPs: z.array(z.string()),
 });
 
@@ -67,7 +67,6 @@ export function CreateStratDialog() {
   const { user } = useUser();
   const router = useRouter();
   const { refreshStrats } = useFilter();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -75,7 +74,6 @@ export function CreateStratDialog() {
       site: "",
       name: "",
       description: "",
-      drawingID: "",
       powerOPs: [],
     },
   });
@@ -83,22 +81,11 @@ export function CreateStratDialog() {
   const selectedMap = form.watch("map");
   const selectedSites =
     MAPS.find((map) => map.name === selectedMap)?.sites ?? [];
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const drawingID = (() => {
-        if (values.drawingID.startsWith("https://drive.google.com/open?id=")) {
-          return values.drawingID.split("https://drive.google.com/open?id=")[1];
-        }
-        if (
-          values.drawingID.startsWith("https://docs.google.com/drawings/d/")
-        ) {
-          return values.drawingID
-            .split("https://docs.google.com/drawings/d/")[1]
-            .split("/")[0];
-        }
-        return values.drawingID;
-      })();
+      // Create a new Excalidraw drawing
+      const drawingID = await createNewDrawing();
+
       const result = await createStrat({
         name: "",
         description: "",
@@ -222,20 +209,8 @@ export function CreateStratDialog() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
-            <FormField
-              control={form.control}
-              name="drawingID"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Drawing ID</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter Google Drawing ID" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            />{" "}
+            {/* Drawing ID field removed as we now generate it automatically with Excalidraw */}
             <FormField
               control={form.control}
               name="powerOPs"

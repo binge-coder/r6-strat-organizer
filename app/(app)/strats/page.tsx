@@ -14,7 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import DEFENDERS from "@/data/operator";
-import { getGoogleDrawingsEditURL } from "@/src/googleDrawings";
+import { getExcalidrawEditURL } from "@/src/excalidraw";
 import { setActive } from "@/src/strats";
 import { Edit, Eye } from "lucide-react";
 import Link from "next/link";
@@ -72,9 +72,9 @@ export default function StratsPage() {
                   }}
                 >
                   <Eye />
-                </Button>
+                </Button>{" "}
                 <Link
-                  href={getGoogleDrawingsEditURL(strat.drawingID)}
+                  href={getExcalidrawEditURL(strat.drawingID)}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
