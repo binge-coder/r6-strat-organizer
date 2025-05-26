@@ -18,12 +18,11 @@ const Excalidraw = dynamic(
 
 // Import CSS in a useEffect to avoid SSR issues
 interface ExcalidrawViewerProps {
-  drawingData: string;
+  drawingData: string | null;
 }
 
 const ExcalidrawViewer: React.FC<ExcalidrawViewerProps> = ({ drawingData }) => {
-  const [elements, setElements] = useState<any[]>([]);
-  const [appState, setAppState] = useState<any>({});
+  const [parsedData, setParsedData] = useState<any>(null);
   const { theme } = useTheme();
 
   // Import CSS on the client side
@@ -31,31 +30,35 @@ const ExcalidrawViewer: React.FC<ExcalidrawViewerProps> = ({ drawingData }) => {
     import("@excalidraw/excalidraw/index.css");
   }, []);
 
+  // Parse the drawing data when it becomes available
   useEffect(() => {
     if (drawingData) {
       try {
-        const parsedData = JSON.parse(drawingData);
-        if (parsedData.elements) {
-          setElements(parsedData.elements);
-        }
-        if (parsedData.appState) {
-          setAppState(parsedData.appState);
-        }
+        const parsed = JSON.parse(drawingData);
+        setParsedData(parsed);
       } catch (e) {
         console.error("Failed to parse drawingData:", e);
       }
     }
   }, [drawingData]);
 
+  // Don't render Excalidraw until we have parsed data
+  if (!parsedData) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        Loading drawing...
+      </div>
+    );
+  }
+
   return (
     <div style={{ height: "100%", width: "100%", minHeight: "500px" }}>
       {typeof window !== "undefined" && (
         <Excalidraw
-          key={drawingData ? "loaded" : "empty"} // Force re-render when data loads
           initialData={{
-            elements,
+            elements: parsedData.elements || [],
             appState: {
-              ...appState,
+              ...parsedData.appState,
               theme: theme === "dark" ? "dark" : "light",
             },
           }}
