@@ -10,5 +10,11 @@ export default function ExcalidrawLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="h-screen w-screen flex flex-col">{children}</div>;
+  return (
+    <html lang="en">
+      <body className="m-0 dark">
+        <div className="h-screen w-screen flex flex-col">{children}</div>
+      </body>
+    </html>
+  );
 }
