@@ -23,11 +23,12 @@ interface ExcalidrawViewerProps {
 
 const ExcalidrawViewer: React.FC<ExcalidrawViewerProps> = ({ drawingData }) => {
   const [parsedData, setParsedData] = useState<any>(null);
-  const { theme } = useTheme();
-
-  // Import CSS on the client side
+  const { theme } = useTheme(); // Import CSS on the client side
   useEffect(() => {
-    import("@excalidraw/excalidraw/index.css");
+    // @ts-ignore - CSS import may not have type declarations
+    import("@excalidraw/excalidraw/index.css").catch(() => {
+      // CSS import may fail in some environments, but it's not critical
+    });
   }, []);
 
   // Parse the drawing data when it becomes available

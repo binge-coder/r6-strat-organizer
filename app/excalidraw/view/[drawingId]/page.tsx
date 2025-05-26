@@ -45,7 +45,8 @@ export default function ViewDrawingPage({ params }: ViewDrawingParams) {
         Drawing not found
       </div>
     );
-  }  return (
+  }
+  return (
     <div className="h-screen w-full">
       <ExcalidrawViewer drawingData={drawingData} />
     </div>
