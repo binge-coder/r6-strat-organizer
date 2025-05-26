@@ -1,21 +1,21 @@
 "use client";
 import ExcalidrawEditor from "@/components/ExcalidrawEditor";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 interface EditDrawingParams {
-  params: {
+  params: Promise<{
     drawingId: string;
-  };
+  }>;
 }
 
 export default function EditDrawingPage({ params }: EditDrawingParams) {
+  const { drawingId } = use(params);
   const [drawingData, setDrawingData] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     const loadDrawing = async () => {
       try {
-        const response = await fetch(`/api/excalidraw/${params.drawingId}`);
+        const response = await fetch(`/api/excalidraw/${drawingId}`);
         const result = await response.json();
 
         if (response.ok && result.data) {
@@ -29,11 +29,10 @@ export default function EditDrawingPage({ params }: EditDrawingParams) {
     };
 
     loadDrawing();
-  }, [params.drawingId]);
-
+  }, [drawingId]);
   const handleSave = async (data: string) => {
     try {
-      await fetch(`/api/excalidraw/${params.drawingId}`, {
+      await fetch(`/api/excalidraw/${drawingId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

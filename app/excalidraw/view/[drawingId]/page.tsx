@@ -1,21 +1,21 @@
 "use client";
 import ExcalidrawViewer from "@/components/ExcalidrawViewer";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 interface ViewDrawingParams {
-  params: {
+  params: Promise<{
     drawingId: string;
-  };
+  }>;
 }
 
 export default function ViewDrawingPage({ params }: ViewDrawingParams) {
+  const { drawingId } = use(params);
   const [drawingData, setDrawingData] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     const loadDrawing = async () => {
       try {
-        const response = await fetch(`/api/excalidraw/${params.drawingId}`);
+        const response = await fetch(`/api/excalidraw/${drawingId}`);
         const result = await response.json();
 
         if (response.ok && result.data) {
@@ -29,7 +29,7 @@ export default function ViewDrawingPage({ params }: ViewDrawingParams) {
     };
 
     loadDrawing();
-  }, [params.drawingId]);
+  }, [drawingId]);
 
   if (isLoading) {
     return (
