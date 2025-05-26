@@ -23,6 +23,7 @@ interface ExcalidrawViewerProps {
 
 const ExcalidrawViewer: React.FC<ExcalidrawViewerProps> = ({ drawingData }) => {
   const [elements, setElements] = useState<any[]>([]);
+  const [appState, setAppState] = useState<any>({});
   const { theme } = useTheme();
 
   // Import CSS on the client side
@@ -37,6 +38,9 @@ const ExcalidrawViewer: React.FC<ExcalidrawViewerProps> = ({ drawingData }) => {
         if (parsedData.elements) {
           setElements(parsedData.elements);
         }
+        if (parsedData.appState) {
+          setAppState(parsedData.appState);
+        }
       } catch (e) {
         console.error("Failed to parse drawingData:", e);
       }
@@ -45,12 +49,13 @@ const ExcalidrawViewer: React.FC<ExcalidrawViewerProps> = ({ drawingData }) => {
 
   return (
     <div style={{ height: "100%", width: "100%", minHeight: "500px" }}>
-      {" "}
       {typeof window !== "undefined" && (
         <Excalidraw
+          key={drawingData ? "loaded" : "empty"} // Force re-render when data loads
           initialData={{
             elements,
             appState: {
+              ...appState,
               theme: theme === "dark" ? "dark" : "light",
             },
           }}
@@ -61,7 +66,6 @@ const ExcalidrawViewer: React.FC<ExcalidrawViewerProps> = ({ drawingData }) => {
               saveAsImage: false,
               loadScene: false,
               saveToActiveFile: false,
-              theme: false,
             },
           }}
         />
