@@ -31,11 +31,6 @@ const ExcalidrawEditor: React.FC<ExcalidrawEditorProps> = ({
   const [initialElements, setInitialElements] = useState<any[]>([]);
   const { theme } = useTheme();
 
-  // Import CSS on the client side
-  useEffect(() => {
-    import("@excalidraw/excalidraw/index.css");
-  }, []);
-
   // Parse initial data if provided
   useEffect(() => {
     if (initialData) {

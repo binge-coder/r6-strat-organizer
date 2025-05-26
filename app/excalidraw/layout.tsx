@@ -1,5 +1,7 @@
+import "@excalidraw/excalidraw/index.css";
 import type { Metadata } from "next";
 import "../globals.css";
+import "./excalidraw.css";
 
 export const metadata: Metadata = {
   title: "Excalidraw Editor - R6 Strat Organizer",

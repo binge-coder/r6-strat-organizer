@@ -16,7 +16,7 @@ try {
 // Load drawing endpoint
 export async function GET(
   request: NextRequest,
-  context: { params: { drawingId: string } }
+  context: { params: Promise<{ drawingId: string }> }
 ) {
   try {
     const { drawingId } = await context.params;
@@ -43,7 +43,7 @@ export async function GET(
 // Save drawing endpoint
 export async function POST(
   request: NextRequest,
-  context: { params: { drawingId: string } }
+  context: { params: Promise<{ drawingId: string }> }
 ) {
   try {
     const { drawingId } = await context.params;
