@@ -46,7 +46,7 @@ export async function POST(
   context: { params: { drawingId: string } }
 ) {
   try {
-    const { drawingId } = context.params;
+    const { drawingId } = await context.params;
     const body = await request.json();
 
     if (!body.data) {
