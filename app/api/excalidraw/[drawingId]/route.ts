@@ -19,7 +19,7 @@ export async function GET(
   context: { params: { drawingId: string } }
 ) {
   try {
-    const { drawingId } = context.params;
+    const { drawingId } = await context.params;
     const filePath = path.join(DATA_DIR, `${drawingId}.json`);
 
     // Check if file exists
