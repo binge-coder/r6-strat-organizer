@@ -1,5 +1,6 @@
 # How to use
 
+- Make sure you have valid .env file
 - First make the db using this command:
 ```
 npm run push-sql-schema
