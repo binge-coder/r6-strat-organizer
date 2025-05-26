@@ -1,7 +1,11 @@
 # How to use
 
 - Make sure you have valid .env file
-- First make the db using this command:
+- do this first:
+```
+npm install
+```
+- then make the db schema using this command (only needed to be done one time ):
 ```
 npm run push-sql-schema
 ```
