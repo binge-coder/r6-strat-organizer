@@ -47,9 +47,28 @@ export async function POST(
 ) {
   try {
     const { drawingId } = await context.params;
-    const body = await request.json();
 
-    if (!body.data) {
+    // Check if request has a body
+    const contentLength = request.headers.get("content-length");
+    if (!contentLength || contentLength === "0") {
+      return NextResponse.json(
+        { error: "No request body provided" },
+        { status: 400 }
+      );
+    }
+
+    let body;
+    try {
+      body = await request.json();
+    } catch (jsonError) {
+      console.error("Error parsing JSON:", jsonError);
+      return NextResponse.json(
+        { error: "Invalid JSON in request body" },
+        { status: 400 }
+      );
+    }
+
+    if (!body || !body.data) {
       return NextResponse.json(
         { error: "No drawing data provided" },
         { status: 400 }
